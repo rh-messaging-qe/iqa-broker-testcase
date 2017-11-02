@@ -1,0 +1,44 @@
+# Install brokers - now optinal
+---
+# Generate config and deploy them on router machines
+- name: Deploy configs.
+  hosts: routers
+  vars:
+    dispatch_package_source_epel: false
+    dispatch_package_pip: true
+    dispatch_skip_install: true
+    dispatch_skip_template_generator: false
+    dispatch_skip_generate_template: false
+    dispatch_skip_generate_congfigs: false
+    router_vars: /tmp/generated/user_defined_R12_B1/router_confs.json
+  pre_tasks:
+    - include_vars:
+        file: "{{ router_vars }}"
+  roles:
+    - role: ansible-qpid-dispatch
+
+- name: Comunicate
+  hosts: clients
+  strategy: free
+  vars:
+    - receiver: broker1
+  tasks:
+    - name: Start receiver
+      command: timeout 40s cli-rhea-receiver --broker "{{hostvars[receiver]['ansible_host']}}:5672" --address "queue_test" --count 4 --log-msgs dict
+      when: inventory_hostname == "receiver"
+
+    - name: Send thru router1
+      command: cli-rhea-sender --broker "{{hostvars['router1']['ansible_host']}}:5672" --address "queue_test" --count 1 --msg-content "text message" --log-msgs dict
+      when: inventory_hostname == "sender"
+
+    - name: Send thru router2
+      command: cli-rhea-sender --broker "{{hostvars['router2']['ansible_host']}}:5672" --address "queue_test" --count 1 --msg-content "text message" --log-msgs dict
+      when: inventory_hostname == "sender"
+
+    - name: Send thru router3
+      command: cli-rhea-sender --broker "{{hostvars['router3']['ansible_host']}}:5672" --address "queue_test" --count 1 --msg-content "text message" --log-msgs dict
+      when: inventory_hostname == "sender"
+
+    - name: Send thru router4
+      command: cli-rhea-sender --broker "{{hostvars['router4']['ansible_host']}}:5672" --address "queue_test" --count 1 --msg-content "text message" --log-msgs dict
+      when: inventory_hostname == "sender"

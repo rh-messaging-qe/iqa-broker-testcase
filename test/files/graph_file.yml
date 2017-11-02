@@ -1,0 +1,68 @@
+---
+directed: false
+graph: {}
+nodes:
+- type: router
+  id: router1
+- type: router
+  id: router2
+- type: router
+  id: router3
+- type: router
+  id: router4
+- type: router
+  id: router5
+- type: router
+  id: router6
+- type: router
+  id: router7
+- type: router
+  id: router8
+- type: router
+  id: router9
+- type: router
+  id: router10
+- type: router
+  id: router11
+- type: router
+  id: router12
+- type: broker
+  id: broker1
+links:
+- source: router1
+  target: broker1
+  value: 1
+- source: router2
+  target: broker1
+  value: 1
+- source: router3
+  target: broker1
+  value: 1
+- source: router4
+  target: broker1
+  value: 1
+- source: router5
+  target: broker1
+  value: 1
+- source: router6
+  target: broker1
+  value: 1
+- source: router7
+  target: broker1
+  value: 1
+- source: router8
+  target: broker1
+  value: 1
+- source: router9
+  target: broker1
+  value: 1
+- source: router10
+  target: broker1
+  value: 1
+- source: router11
+  target: broker1
+  value: 1
+- source: router12
+  target: broker1
+  value: 1
+multigraph: false

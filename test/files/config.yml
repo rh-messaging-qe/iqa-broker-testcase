@@ -1,0 +1,2 @@
+hostfile: inventory
+graph_file: graph_file.yml
