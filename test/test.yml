@@ -1,4 +1,3 @@
-# Install brokers - now optinal
 ---
 # Generate config and deploy them on router machines
 - name: Deploy configs.
@@ -24,21 +23,39 @@
     - receiver: broker1
   tasks:
     - name: Start receiver
-      command: timeout 40s cli-rhea-receiver --broker "{{hostvars[receiver]['ansible_host']}}:5672" --address "queue_test" --count 4 --log-msgs dict
+      command: timeout 5s cli-rhea-receiver --broker "{{ hostvars[receiver]['ansible_host'] }}:5672" --address "{{ item }}_queue" --count 1 --log-msgs dict
+      with_inventory_hostnames:
+        - routers
+      # with_items:
+      #   - router1
+      #   - router2
+      #   - router3
+      #   - router4
+      #   - router5
+      #   - router6
+      #   - router7
+      #   - router8
+      #   - router9
+      #   - router10
+      #   - router11
+      #   - router12
       when: inventory_hostname == "receiver"
 
-    - name: Send thru router1
-      command: cli-rhea-sender --broker "{{hostvars['router1']['ansible_host']}}:5672" --address "queue_test" --count 1 --msg-content "text message" --log-msgs dict
-      when: inventory_hostname == "sender"
-
-    - name: Send thru router2
-      command: cli-rhea-sender --broker "{{hostvars['router2']['ansible_host']}}:5672" --address "queue_test" --count 1 --msg-content "text message" --log-msgs dict
-      when: inventory_hostname == "sender"
-
-    - name: Send thru router3
-      command: cli-rhea-sender --broker "{{hostvars['router3']['ansible_host']}}:5672" --address "queue_test" --count 1 --msg-content "text message" --log-msgs dict
-      when: inventory_hostname == "sender"
-
-    - name: Send thru router4
-      command: cli-rhea-sender --broker "{{hostvars['router4']['ansible_host']}}:5672" --address "queue_test" --count 1 --msg-content "text message" --log-msgs dict
+    - name: Send messages
+      command: timeout 5s cli-rhea-sender --broker "{{ hostvars[item]['ansible_host'] }}:5672" --address "{{ item }}_queue" --count 1 --msg-content "text message" --log-msgs dict
+      with_inventory_hostnames:
+        - routers
+      # with_items:
+      #   - router1
+      #   - router2
+      #   - router3
+      #   - router4
+      #   - router5
+      #   - router6
+      #   - router7
+      #   - router8
+      #   - router9
+      #   - router10
+      #   - router11
+      #   - router12
       when: inventory_hostname == "sender"
